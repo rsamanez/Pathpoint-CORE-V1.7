@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Touchpoint component Touchpoint component with default data 1`] = `
+<div
+  className="divStep"
+>
+  <div
+    className="divContentPoint"
+  >
+    <div
+      className="textContentPoint"
+      onClick={[Function]}
+      onMouseDown={[Function]}
+      style={
+        Object {
+          "background": "#D7DADB",
+          "border": "1px solid rgb(189,189,189)",
+          "cursor": "pointer",
+          "display": "none",
+        }
+      }
+    >
+      <div
+        className="squareState"
+        style={
+          Object {
+            "background": "rgb(189,189,189)",
+          }
+        }
+      />
+      <div
+        style={
+          Object {
+            "cursor": "pointer",
+          }
+        }
+      />
+    </div>
+  </div>
+  <div />
+</div>
+`;

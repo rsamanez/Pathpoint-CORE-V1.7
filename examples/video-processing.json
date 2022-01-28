@@ -1,0 +1,866 @@
+{
+    "pathpointVersion": "1.5.0",
+    "kpis": [
+        {
+            "type": 101,
+            "name": "Total Order Count",
+            "shortName": "Total Count",
+            "measure": [
+                {
+                    "accountID": 2710112,
+                    "query": "SELECT count(*) as value FROM Transaction COMPARE WITH 2 day ago",
+                    "link": "https://onenr.io/01qwL8KPxw5"
+                }
+            ],
+            "value_type": "INT",
+            "prefix": "",
+            "suffix": "Orders"
+        },
+        {
+            "type": 101,
+            "name": "Total Order Value",
+            "shortName": "Total Value",
+            "measure": [
+                {
+                    "accountID": 2710112,
+                    "query": "SELECT count(*) as value FROM Transaction COMPARE WITH 2 day ago",
+                    "link": "https://onenr.io/01qwL8KPxw5"
+                }
+            ],
+            "value_type": "FLOAT",
+            "prefix": "$",
+            "suffix": ""
+        },
+        {
+            "type": 100,
+            "name": "Max Duration",
+            "shortName": "Max Drtion.",
+            "measure": [
+                {
+                    "accountID": 2710112,
+                    "query": "SELECT count(*) as value FROM Transaction",
+                    "link": "https://onenr.io/01qwL8KPxw5"
+                }
+            ],
+            "value_type": "FLOAT",
+            "prefix": "",
+            "suffix": ""
+        }
+    ],
+    "stages": [
+        {
+            "title": "REQUEST",
+            "active_dotted": "none",
+            "steps": [
+                {
+                    "line": 1,
+                    "values": [
+                        {
+                            "title": "ALIAS/VMS:  WOs",
+                            "id": "ST1-LINE1-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 2,
+                    "values": [
+                        {
+                            "title": "Asset/Content File pick up",
+                            "id": "ST1-LINE2-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 3,
+                    "values": [
+                        {
+                            "title": "File ingested/stored into ALIAS location",
+                            "id": "ST1-LINE3-SS1"
+                        }
+                    ]
+                }
+            ],
+            "touchpoints": [
+                {
+                    "title": "Alias/VMS Database (PRC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST1-LINE1-SS1",
+                    "queries": [
+                        {
+                            "type": "PRC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) as session FROM Public_APICall WHERE awsRegion='queue'",
+                            "query_timeout": 10,
+                            "min_count": 10,
+                            "measure_time": "15 minutes ago"
+                        }
+                    ]
+                },
+                {
+                    "title": "Alias/VMS Database (APP)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST1-LINE1-SS1",
+                    "queries": [
+                        {
+                            "type": "APP-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:0.028), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from Transaction WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.4,
+                            "max_response_time": 0.5,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult Database (FRT)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST1-LINE1-SS1",
+                    "queries": [
+                        {
+                            "type": "FRT-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:1), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from PageView WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.6,
+                            "max_response_time": 1.2,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult device agents (PRC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST1-LINE2-SS1",
+                    "queries": [
+                        {
+                            "type": "PRC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) as session FROM Public_APICall WHERE awsRegion='us-east-1'",
+                            "query_timeout": 10,
+                            "min_count": 36,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult device agents (SYN)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST1-LINE2-SS1",
+                    "queries": [
+                        {
+                            "type": "SYN-CHECK-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(percentage(count(result),WHERE result='SUCCESS'),WHERE 1=1) as success, max(duration) as duration, max(longRunningTasksAvgTime) as request from SyntheticCheck,SyntheticRequest WHERE monitorName='BDB Live person'",
+                            "query_timeout": 10,
+                            "max_avg_response_time": 0.7,
+                            "max_total_check_time": 1.25,
+                            "min_success_percentage": 98,
+                            "measure_time": "3 hours ago"
+                        }
+                    ]
+                },
+                {
+                    "title": "DIVA health status (APP)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST1-LINE3-SS1",
+                    "queries": [
+                        {
+                            "type": "APP-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:0.028), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from Transaction WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.4,
+                            "max_response_time": 0.5,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Delivery agents (PRC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST1-LINE2-SS1",
+                    "queries": [
+                        {
+                            "type": "PRC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) as session FROM Public_APICall WHERE awsRegion='us-east-1'",
+                            "query_timeout": 10,
+                            "min_count": 36,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Delivery agents (WLD)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://one.newrelic.com/redirect/entity/Mjg0NzMzMnxWSVp8REFTSEJPQVJEfDE2NzQ3NTE"
+                    ],
+                    "related_steps": "ST1-LINE2-SS1",
+                    "queries": [
+                        {
+                            "type": "WORKLOAD-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT latest(statusValue) as statusValue FROM WorkloadStatus WHERE entity.name='ACME Banking'",
+                            "query_timeout": 10,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "PRESERVATION",
+            "active_dotted": "none",
+            "arrowMode": "FLOW",
+            "percentage_above_avg": 20,
+            "steps": [
+                {
+                    "line": 1,
+                    "values": [
+                        {
+                            "title": "Catapult: Workflow Path ",
+                            "id": "ST2-LINE1-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 2,
+                    "values": [
+                        {
+                            "title": "Tasks",
+                            "id": "ST2-LINE2-SS1"
+                        },
+                        {
+                            "title": "Priorities",
+                            "id": "ST2-LINE2-SS2"
+                        },
+                        {
+                            "title": "Users",
+                            "id": "ST2-LINE2-SS3"
+                        }
+                    ]
+                },
+                {
+                    "line": 3,
+                    "values": [
+                        {
+                            "title": "Jobs Queue",
+                            "id": "ST2-LINE3-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 4,
+                    "values": [
+                        {
+                            "title": "Archive",
+                            "id": "ST2-LINE4-SS1"
+                        },
+                        {
+                            "title": "Restore",
+                            "id": "ST2-LINE4-SS2"
+                        }
+                    ]
+                },
+                {
+                    "line": 5,
+                    "values": [
+                        {
+                            "title": "Device Type",
+                            "id": "ST2-LINE5-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 6,
+                    "values": [
+                        {
+                            "title": "DIVA: File Restored",
+                            "id": "ST2-LINE6-SS1"
+                        },
+                        {
+                            "title": "GCP: File Restored",
+                            "id": "ST2-LINE6-SS2"
+                        }
+                    ]
+                }
+            ],
+            "touchpoints": [
+                {
+                    "title": "Catapult Database (PCC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST2-LINE1-SS1",
+                    "queries": [
+                        {
+                            "type": "PCC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) FROM Transaction WHERE appName='frontend-service'",
+                            "query_timeout": 10,
+                            "min_count": 20,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult Database (APP)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST2-LINE1-SS1",
+                    "queries": [
+                        {
+                            "type": "APP-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:0.028), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from Transaction WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.4,
+                            "max_response_time": 0.5,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult device agents (FRT)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST2-LINE3-SS1",
+                    "queries": [
+                        {
+                            "type": "FRT-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:1), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from PageView WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.6,
+                            "max_response_time": 1.2,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult device agents (SYN)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST2-LINE3-SS1",
+                    "queries": [
+                        {
+                            "type": "SYN-CHECK-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(percentage(count(result),WHERE result='SUCCESS'),WHERE 1=1) as success, max(duration) as duration, max(longRunningTasksAvgTime) as request from SyntheticCheck,SyntheticRequest WHERE monitorName='BDB Live person'",
+                            "query_timeout": 10,
+                            "max_avg_response_time": 0.7,
+                            "max_total_check_time": 1.25,
+                            "min_success_percentage": 98,
+                            "measure_time": "3 hours ago"
+                        }
+                    ]
+                },
+                {
+                    "title": "DIVA health status (APP)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST2-LINE3-SS1",
+                    "queries": [
+                        {
+                            "type": "APP-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:0.028), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from Transaction WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.4,
+                            "max_response_time": 0.5,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Delivery agents (PCC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST2-LINE2-SS3",
+                    "queries": [
+                        {
+                            "type": "PCC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) from Transaction WHERE appName='productCatalog-service'",
+                            "query_timeout": 10,
+                            "min_count": 36,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "GCP (WLD)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/0a7j9pBB3RO"
+                    ],
+                    "related_steps": "ST2-LINE4-SS1",
+                    "queries": [
+                        {
+                            "type": "WORKLOAD-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT latest(statusValue) as statusValue FROM WorkloadStatus WHERE entity.name='Acme Telco - Ecommerce'",
+                            "query_timeout": 10,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "TRANSCODING",
+            "active_dotted": "none",
+            "arrowMode": "FLOW",
+            "percentage_above_avg": 20,
+            "steps": [
+                {
+                    "line": 1,
+                    "values": [
+                        {
+                            "title": "Catapult Workflow",
+                            "id": "ST3-LINE1-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 2,
+                    "values": [
+                        {
+                            "title": "Task",
+                            "id": "ST3-LINE2-SS1"
+                        },
+                        {
+                            "title": "Priorities",
+                            "id": "ST3-LINE2-SS2"
+                        },
+                        {
+                            "title": "Users",
+                            "id": "ST3-LINE2-SS3"
+                        }
+                    ]
+                },
+                {
+                    "line": 3,
+                    "values": [
+                        {
+                            "title": "Jobs Queue",
+                            "id": "ST3-LINE3-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 4,
+                    "values": [
+                        {
+                            "title": "Elemental: File Conv",
+                            "id": "ST3-LINE4-SS1"
+                        },
+                        {
+                            "title": "MediaMate: File Conv.",
+                            "id": "ST3-LINE4-SS2"
+                        }
+                    ]
+                },
+                {
+                    "line": 5,
+                    "values": [
+                        {
+                            "title": "File Conversion Complete",
+                            "id": "ST3-LINE5-SS1"
+                        }
+                    ]
+                }
+            ],
+            "touchpoints": [
+                {
+                    "title": "Catapult Database (PCC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST3-LINE1-SS1",
+                    "queries": [
+                        {
+                            "type": "PCC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) FROM Transaction WHERE appName='frontend-service'",
+                            "query_timeout": 10,
+                            "min_count": 36,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult device agents (PCC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST3-LINE2-SS3",
+                    "queries": [
+                        {
+                            "type": "PCC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) FROM Transaction WHERE appName='frontend-service'",
+                            "query_timeout": 10,
+                            "min_count": 20,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult device agents (SYN)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST3-LINE2-SS3",
+                    "queries": [
+                        {
+                            "type": "SYN-CHECK-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(percentage(count(result),WHERE result='SUCCESS'),WHERE 1=1) as success, max(duration) as duration, max(longRunningTasksAvgTime) as request from SyntheticCheck,SyntheticRequest WHERE monitorName='BDB Live person'",
+                            "query_timeout": 10,
+                            "max_avg_response_time": 0.7,
+                            "max_total_check_time": 1.25,
+                            "min_success_percentage": 98,
+                            "measure_time": "2 hours ago"
+                        }
+                    ]
+                },
+                {
+                    "title": "Elemental (APP)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST3-LINE4-SS1",
+                    "queries": [
+                        {
+                            "type": "APP-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:0.028), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from Transaction WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.4,
+                            "max_response_time": 0.5,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Elemental (FRT)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST3-LINE4-SS1",
+                    "queries": [
+                        {
+                            "type": "FRT-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:1), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from PageView WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.6,
+                            "max_response_time": 1.2,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "MediaMate (PCC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST3-LINE5-SS1,ST3-LINE2-SS3",
+                    "queries": [
+                        {
+                            "type": "PCC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) from Transaction WHERE appName='shipping-service'",
+                            "query_timeout": 10,
+                            "min_count": 36,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "MediaMate (WLD)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/0YBR6kKKqjO"
+                    ],
+                    "related_steps": "ST3-LINE5-SS1,ST3-LINE2-SS3",
+                    "queries": [
+                        {
+                            "type": "WORKLOAD-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT latest(statusValue) as statusValue FROM WorkloadStatus WHERE entity.name='Demotron V2 - Acme Dev'",
+                            "query_timeout": 10,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "DELIVERY",
+            "active_dotted": "none",
+            "arrowMode": "FLOW",
+            "percentage_above_avg": 20,
+            "steps": [
+                {
+                    "line": 1,
+                    "values": [
+                        {
+                            "title": "Catapult Workflow",
+                            "id": "ST4-LINE1-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 2,
+                    "values": [
+                        {
+                            "title": "Task",
+                            "id": "ST4-LINE2-SS1"
+                        },
+                        {
+                            "title": "Priorities",
+                            "id": "ST4-LINE2-SS2"
+                        },
+                        {
+                            "title": "Users",
+                            "id": "ST4-LINE2-SS3"
+                        }
+                    ]
+                },
+                {
+                    "line": 3,
+                    "values": [
+                        {
+                            "title": "Jobs Queue",
+                            "id": "ST4-LINE3-SS1"
+                        }
+                    ]
+                },
+                {
+                    "line": 4,
+                    "values": [
+                        {
+                            "title": "Signiant: Asset Delivery",
+                            "id": "ST4-LINE4-SS1"
+                        },
+                        {
+                            "title": "MediaShuttle: Asset Delivery",
+                            "id": "ST4-LINE4-SS2"
+                        }
+                    ]
+                },
+                {
+                    "line": 5,
+                    "values": [
+                        {
+                            "title": "Asset Delivered",
+                            "id": "ST4-LINE5-SS1"
+                        }
+                    ]
+                }
+            ],
+            "touchpoints": [
+                {
+                    "title": "Catapult Database (PRC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST4-LINE1-SS1",
+                    "queries": [
+                        {
+                            "type": "PRC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) from Transaction WHERE appName='currency-service'",
+                            "query_timeout": 10,
+                            "min_count": 10,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult Database (APP)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST4-LINE1-SS1",
+                    "queries": [
+                        {
+                            "type": "APP-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:0.028), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from Transaction WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.4,
+                            "max_response_time": 0.5,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult device agents (FRT)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST4-LINE5-SS1,ST4-LINE2-SS3",
+                    "queries": [
+                        {
+                            "type": "FRT-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:1), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from PageView WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.6,
+                            "max_response_time": 1.2,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Catapult device agents (SYN)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST4-LINE5-SS1,ST4-LINE2-SS3",
+                    "queries": [
+                        {
+                            "type": "SYN-CHECK-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(percentage(count(result),WHERE result='SUCCESS'),WHERE 1=1) as success, max(duration) as duration, max(longRunningTasksAvgTime) as request from SyntheticCheck,SyntheticRequest WHERE monitorName='BDB Live person'",
+                            "query_timeout": 10,
+                            "max_avg_response_time": 0.7,
+                            "max_total_check_time": 1.25,
+                            "min_success_percentage": 98,
+                            "measure_time": "1 hour ago"
+                        }
+                    ]
+                },
+                {
+                    "title": "Signiant health status (PRC)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST4-LINE3-SS1",
+                    "queries": [
+                        {
+                            "type": "PRC-COUNT-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT count(*) from Transaction WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_count": 36,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "Signiant health status (WLD)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/0x0jlDzz7jW"
+                    ],
+                    "related_steps": "ST4-LINE3-SS1",
+                    "queries": [
+                        {
+                            "type": "WORKLOAD-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT latest(statusValue) as statusValue FROM WorkloadStatus WHERE entity.name='Databases'",
+                            "query_timeout": 10,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "MediaShuttle Delivery agents (APP)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/01qwL8KPxw5"
+                    ],
+                    "related_steps": "ST4-LINE4-SS2",
+                    "queries": [
+                        {
+                            "type": "APP-HEALTH-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT filter(apdex(duration, t:0.028), WHERE 1=1) as apdex, filter( max(duration), WHERE 1=1) as response,filter(percentage(count(*), WHERE error is true), WHERE 1=1) as error from Transaction WHERE appName='QS'",
+                            "query_timeout": 10,
+                            "min_apdex": 0.4,
+                            "max_response_time": 0.5,
+                            "max_error_percentage": 5,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                },
+                {
+                    "title": "MediaShuttle Delivery agents (WLD)",
+                    "status_on_off": true,
+                    "dashboard_url": [
+                        "https://onenr.io/0x0jlDzz7jW"
+                    ],
+                    "related_steps": "ST4-LINE4-SS2",
+                    "queries": [
+                        {
+                            "type": "WORKLOAD-QUERY",
+                            "accountID": 1,
+                            "query": "SELECT latest(statusValue) as statusValue FROM WorkloadStatus WHERE entity.name='Databases'",
+                            "query_timeout": 10,
+                            "measure_time": "5 MINUTES AGO"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

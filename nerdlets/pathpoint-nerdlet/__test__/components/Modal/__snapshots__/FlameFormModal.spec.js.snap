@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FlameFormModal component Render body with default data 1`] = `
+<div
+  style={
+    Object {
+      "paddingTop": "20px",
+      "width": "400px",
+    }
+  }
+>
+  <form
+    onSubmit={[MockFunction]}
+  >
+    <div
+      className="modal4content"
+    >
+       
+      The Flame filter will highlight the most problematic “Steps and Touchpoints” with a configurable time window and percentile threshold.  The filter will show the worst n percentile of touchpoints.  This is useful in situations where things look okay now but may have had a pattern of errors or latency in the recent past.  This filter requires the installation of a background script that is downloadable from the Pathpoint Setup Menu.
+       
+    </div>
+    <div
+      style={
+        Object {
+          "float": "left",
+          "height": "50px",
+          "margin": "20px 15px 0px 0px",
+        }
+      }
+    >
+      <span
+        className="touchPointCheckbox"
+      >
+        <input
+          id="checkbox_fire"
+          name="checkbox_fire"
+          type="Checkbox"
+        />
+        <label
+          className="checkboxLabel"
+        >
+          Do not show this message again.
+        </label>
+      </span>
+    </div>
+    <div
+      style={
+        Object {
+          "float": "right",
+          "height": "50px",
+          "margin": "20px 15px 0px 0px",
+        }
+      }
+    >
+      <button
+        className="btn btn-default"
+        color="primary"
+        disabled={false}
+        style={
+          Object {
+            "background": "#0178bf",
+            "color": "white",
+          }
+        }
+        type="submit"
+        variant="contained"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`FlameFormModal component Render header with default data 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+    }
+  }
+>
+  <div
+    className="titleModal"
+  >
+    <img
+      height="15"
+      src={Object {}}
+      width="15"
+    />
+     Flame
+  </div>
+</div>
+`;

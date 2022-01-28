@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CanaryFormModal component Render body with default data 1`] = `
+<div
+  style={
+    Object {
+      "paddingTop": "20px",
+      "width": "400px",
+    }
+  }
+>
+  <form
+    onSubmit={[MockFunction]}
+  >
+    <div
+      className="modal4content"
+    >
+      When activating the Canary, all states are reset and Pathpoint will only begin to calculate the steps that are activated manually. It is likely to illustrate the specific operation of a particular step.  This is a useful view when you are troubleshooting one step or in the process of a code deployment or system maintenance and want to constrain your view.   If you are running the Pathpoint background job the signals for non-visible touchpoints will still be available with the Flame view.
+    </div>
+    <div
+      style={
+        Object {
+          "float": "left",
+          "height": "50px",
+          "margin": "20px 15px 0px 0px",
+        }
+      }
+    >
+      <span
+        className="touchPointCheckbox"
+      >
+        <input
+          id="checkbox_canary"
+          name="checkbox_canary"
+          type="Checkbox"
+        />
+        <label
+          className="checkboxLabel"
+        >
+          Do not show this message again.
+        </label>
+      </span>
+    </div>
+    <div
+      style={
+        Object {
+          "float": "right",
+          "height": "50px",
+          "margin": "20px 15px 0px 0px",
+        }
+      }
+    >
+      <button
+        className="btn btn-default"
+        color="primary"
+        disabled={false}
+        style={
+          Object {
+            "background": "#0178bf",
+            "color": "white",
+          }
+        }
+        type="submit"
+        variant="contained"
+      >
+        Continue
+      </button>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`CanaryFormModal component Render header with default data 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+    }
+  }
+>
+  <div
+    className="titleModal"
+  >
+    <img
+      src={Object {}}
+      width="18"
+    />
+     Canary
+  </div>
+</div>
+`;

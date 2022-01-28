@@ -1,0 +1,154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LogoFormModal component Render body with default data 1`] = `
+<div
+  style={
+    Object {
+      "width": "350px",
+    }
+  }
+>
+  <div
+    className="modal4content space form-parent-container"
+  >
+    <form
+      className=""
+      onSubmit={[MockFunction]}
+    >
+      <div
+        className="form-group"
+      >
+        <div
+          className="custom-select-wrapper"
+          onClick={[Function]}
+        >
+          <div
+            className="custom-select"
+            style={Object {}}
+          >
+            <div
+              className="custom-select__trigger"
+            >
+              <span
+                style={
+                  Object {
+                    "overflow": "hidden",
+                    "textOverflow": "ellipsis",
+                    "whiteSpace": "nowrap",
+                    "width": "230px",
+                  }
+                }
+              >
+                By URL
+              </span>
+              <div
+                className="arrow"
+              />
+            </div>
+            <div
+              className="custom-options"
+              style={Object {}}
+            >
+              <span
+                className="custom-option selected"
+                onClick={[Function]}
+              >
+                By URL
+              </span>
+              <span
+                className="custom-option"
+                onClick={[Function]}
+              >
+                Text
+              </span>
+              <span
+                className="custom-option"
+                onClick={[Function]}
+              >
+                Default
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style={
+          Object {
+            "marginTop": "6px",
+          }
+        }
+      >
+        <span
+          style={
+            Object {
+              "color": "#BDBDBD",
+            }
+          }
+        >
+          Dimensions 45 x 27
+        </span>
+        <div
+          className="form-group"
+        >
+          <input
+            className="support-modal-input-text"
+            id="formUrl"
+            name="url"
+            onChange={[MockFunction]}
+            placeholder="Enter URL"
+            required={true}
+            type="text"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          Object {
+            "display": "flex",
+            "justifyContent": "flex-end",
+            "marginTop": "20px",
+          }
+        }
+      >
+        <button
+          className="btn btn-default"
+          color="primary"
+          disabled={false}
+          style={
+            Object {
+              "background": "#0178bf",
+              "color": "white",
+              "marginTop": "15px",
+              "width": "45%",
+            }
+          }
+          type="submit"
+          variant="contained"
+        >
+          Save Update
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`LogoFormModal component Render header with default data 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+    }
+  }
+>
+  <div
+    className="titleModal"
+  >
+    <img
+      height="18"
+      src={Object {}}
+    />
+     Logo
+  </div>
+</div>
+`;

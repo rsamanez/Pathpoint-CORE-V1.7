@@ -1,0 +1,7 @@
+{
+    "schemaType": "LAUNCHER",
+    "id": "pathpoint-launcher",
+    "displayName": "Pathpoint",
+    "description": "Digital Business Tracker",
+    "rootNerdletId": "pathpoint-nerdlet"
+}
